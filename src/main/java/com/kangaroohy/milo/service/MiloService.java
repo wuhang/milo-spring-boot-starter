@@ -2,6 +2,7 @@ package com.kangaroohy.milo.service;
 
 import com.kangaroohy.milo.configuration.MiloProperties;
 import com.kangaroohy.milo.model.ReadWriteEntity;
+import com.kangaroohy.milo.model.SubNode;
 import com.kangaroohy.milo.model.WriteEntity;
 import com.kangaroohy.milo.pool.MiloConnectPool;
 import com.kangaroohy.milo.runner.BrowseNodeRunner;
@@ -13,6 +14,7 @@ import com.kangaroohy.milo.runner.subscription.SubscriptionRunner;
 import com.kangaroohy.milo.utils.CustomUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
+import org.eclipse.milo.opcua.sdk.client.nodes.UaNode;
 import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned;
 import org.springframework.stereotype.Service;
@@ -73,7 +75,7 @@ public class MiloService {
      * @param browseRoot 节点名称
      * @return 指定节点 tag列表
      */
-    public List<String> browseNode(String browseRoot) throws Exception {
+    public List<SubNode> browseNode(String browseRoot) throws Exception {
         return browseNode(browseRoot, null);
     }
 
@@ -84,7 +86,7 @@ public class MiloService {
      * @param clientName 配置key
      * @return 指定节点 tag列表
      */
-    public List<String> browseNode(String browseRoot, String clientName) throws Exception {
+    public List<SubNode> browseNode(String browseRoot, String clientName) throws Exception {
         MiloProperties.Config config = CustomUtil.getConfig(properties, clientName);
         BrowseNodeRunner runner = new BrowseNodeRunner(browseRoot);
         OpcUaClient client = connectPool.borrowObject(config);

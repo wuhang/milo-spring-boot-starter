@@ -1,5 +1,6 @@
 package com.kangaroohy.milo.runner;
 
+import com.kangaroohy.milo.model.SubNode;
 import com.kangaroohy.milo.utils.CustomUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
@@ -28,13 +29,13 @@ public class BrowseNodeRunner {
         this.browseRoot = browseRoot;
     }
 
-    public List<String> run(OpcUaClient opcUaClient) {
+    public List<SubNode> run(OpcUaClient opcUaClient) {
         NodeId nodeId = CustomUtil.parseNodeId(browseRoot);
         return browseNode(browseRoot, opcUaClient, nodeId);
     }
 
-    private List<String> browseNode(String prefix, OpcUaClient client, NodeId browseRoot) {
-        List<String> nodesList = new ArrayList<>();
+    private List<SubNode> browseNode(String prefix, OpcUaClient client, NodeId browseRoot) {
+        List<SubNode> nodesList = new ArrayList<>();
         try {
             List<? extends UaNode> nodes = client.getAddressSpace().browseNodes(browseRoot);
 
@@ -44,9 +45,20 @@ public class BrowseNodeRunner {
                 String sub = prefix + "." + node.getBrowseName().getName();
 
                 // recursively browse to children
-                List<String> browseNode = browseNode(sub, client, node.getNodeId());
+                List<SubNode> browseNode = browseNode(sub, client, node.getNodeId());
                 if (browseNode.isEmpty()) {
-                    nodesList.add(sub);
+                    SubNode subNode = new SubNode(
+                            client,
+                            node.getNodeId(),
+                            node.getNodeClass(),
+                            node.getBrowseName(),
+                            node.getDisplayName(),
+                            sub,
+                            node.getDescription(),
+                            node.getWriteMask(),
+                            node.getUserWriteMask()
+                    );
+                    nodesList.add(subNode);
                 } else {
                     nodesList.addAll(browseNode(sub, client, node.getNodeId()));
                 }

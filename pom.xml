@@ -6,7 +6,7 @@
     <name>milo-spring-boot-starter</name>
     <groupId>com.kangaroohy</groupId>
     <artifactId>milo-spring-boot-starter</artifactId>
-    <version>3.0.4</version>
+    <version>3.0.6</version>
     <description>milo opc ua spring boot starter封装组件</description>
     <url>https://github.com/kangaroo1122/milo-spring-boot-starter</url>
 
@@ -74,14 +74,12 @@
 
     <distributionManagement>
         <repository>
-            <id>ossrh</id>
-            <name>oss nexus repository hosting</name>
-            <url>https://s01.oss.sonatype.org/content/repositories/releases/</url>
+            <id>rdc-releases</id>
+            <url>https://packages.aliyun.com/maven/repository/2022005-release-ljEdVR/</url>
         </repository>
         <snapshotRepository>
-            <id>ossrh</id>
-            <name>oss nexus repository hosting</name>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+            <id>rdc-snapshots</id>
+            <url>https://packages.aliyun.com/maven/repository/2022005-snapshot-bvN6Dd/</url>
         </snapshotRepository>
     </distributionManagement>
 
@@ -95,6 +93,8 @@
                     <compilerArgs>
                         <arg>-parameters</arg>
                     </compilerArgs>
+                    <source>8</source>
+                    <target>8</target>
                 </configuration>
             </plugin>
             <!--生成源码插件-->
@@ -127,21 +127,6 @@
                             <goal>jar</goal>
                         </goals>
                         <phase>package</phase>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- jar等文件签名插件，用于生成asc签名文件 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.6</version>
-                <executions>
-                    <execution>
-                        <id>gpg</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>

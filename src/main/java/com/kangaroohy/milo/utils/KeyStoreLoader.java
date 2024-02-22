@@ -1,7 +1,9 @@
 package com.kangaroohy.milo.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.milo.opcua.stack.client.security.ClientCertificateValidator;
 import org.eclipse.milo.opcua.stack.client.security.DefaultClientCertificateValidator;
+import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.security.DefaultTrustListManager;
 import org.eclipse.milo.opcua.stack.core.util.SelfSignedCertificateBuilder;
 import org.eclipse.milo.opcua.stack.core.util.SelfSignedCertificateGenerator;
@@ -15,6 +17,7 @@ import java.nio.file.Paths;
 import java.security.*;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 @Slf4j
@@ -29,7 +32,7 @@ public class KeyStoreLoader {
     private X509Certificate clientCertificate;
     private X509Certificate[] clientCertificateChain;
     private KeyPair clientKeyPair;
-    private DefaultClientCertificateValidator certificateValidator;
+    private ClientCertificateValidator certificateValidator;
 
     public KeyStoreLoader load() throws Exception {
         Path securityTempDir = Paths.get(System.getProperty("java.io.tmpdir"), "security");
@@ -48,7 +51,7 @@ public class KeyStoreLoader {
 
         DefaultTrustListManager trustListManager = new DefaultTrustListManager(pkiDir);
 
-        certificateValidator = new DefaultClientCertificateValidator(trustListManager);
+        certificateValidator = new ClientCertificateValidator.InsecureValidator();
 
         log.info("Loading KeyStore at {}", serverKeyStore);
 
@@ -112,7 +115,7 @@ public class KeyStoreLoader {
         return clientCertificateChain;
     }
 
-    public DefaultClientCertificateValidator getCertificateValidator() {
+    public ClientCertificateValidator getCertificateValidator() {
         return certificateValidator;
     }
 
